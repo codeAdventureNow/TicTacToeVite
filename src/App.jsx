@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 function Square({ value, onSquareClick }) {
@@ -30,9 +30,9 @@ function App() {
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [chooseTeam, setChooseTeam] = useState(true);
   const [team, setTeam] = useState('X');
+  const [turns, setTurns] = useState(1);
 
   function handleSquareClick(i) {
-    console.log(i);
     if (chooseTeam) {
       return;
     }
@@ -50,33 +50,42 @@ function App() {
 
     setSquares(nextSquares);
     setXIsNext(!xIsNext);
+    setTurns(turns + 1);
   }
+  console.log(turns);
 
   let randomSquareChoice = Math.floor(Math.random() * squares.length);
+  // console.log(randomSquareChoice);
 
-  function computerChoosesNextSquare(i) {
-    if (chooseTeam) {
-      return;
-    }
-    if (squares[i] || calculateWinner(squares)) {
-      return;
-    }
-    let nextSquares = squares.slice();
+  // function computerChoosesNextSquare(i) {
+  //   if (chooseTeam) {
+  //     return;
+  //   }
+  //   if (squares[i] || calculateWinner(squares)) {
+  //     return;
+  //   }
+  //   let nextSquares = squares.slice();
 
-    // console.log(square);
-    if (!xIsNext) {
-      nextSquares[i] = 'O';
-    } else {
-      nextSquares[i] = 'X';
-    }
+  //   if (xIsNext) {
+  //     nextSquares[i] = 'X';
+  //   } else {
+  //     nextSquares[i] = 'O';
+  //   }
 
-    setSquares(nextSquares);
-    setXIsNext(xIsNext);
+  //   setSquares(nextSquares);
+
+  //   setTurns(turns + 1);
+  // }
+
+  if (turns % 2 == 0) {
+    // computerChoosesNextSquare(randomSquareChoice);
+    // // console.log('turns are even');
+    // setXIsNext(!xIsNext);
+    handleSquareClick(randomSquareChoice);
+    setTurns(turns + 1);
+    setXIsNext(!xIsNext);
   }
-
-  if (!xIsNext) {
-    computerChoosesNextSquare(randomSquareChoice);
-  }
+  console.log(xIsNext);
 
   function handleChoosePlayerClick(value) {
     setChooseTeam(false);
@@ -114,10 +123,6 @@ function App() {
   const winner = calculateWinner(squares);
   let status;
 
-  if (!squares.includes(null)) {
-    console.log('Squares are full');
-  }
-
   if (winner) {
     status = 'Winner: ' + winner;
     setTimeout(() => {
@@ -143,6 +148,7 @@ function App() {
     setSquares(Array(9).fill(null));
     setChooseTeam(true);
     setTeam('X');
+    setTurns(1);
   }
 
   return (
