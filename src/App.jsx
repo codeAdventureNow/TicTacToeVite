@@ -87,13 +87,21 @@ function App() {
 
   if (winner) {
     status = 'Winner: ' + winner;
+    setTimeout(() => {
+      setChooseTeam(true);
+      setXIsNext('X');
+      setSquares(Array(9).fill(null));
+    }, 3000);
   } else if (!squares.includes(null)) {
     status = 'Tie Game';
+    setTimeout(() => {
+      setChooseTeam(true);
+      setXIsNext('X');
+      setSquares(Array(9).fill(null));
+    }, 3000);
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : '0');
   }
-
-  //if squares are full and no winner status =  Tie game!
 
   function handleReset() {
     setXIsNext('X');
