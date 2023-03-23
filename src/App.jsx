@@ -32,6 +32,11 @@ function App() {
   const [team, setTeam] = useState('X');
 
   function handleSquareClick(i) {
+    console.log(i);
+    if (chooseTeam) {
+      return;
+    }
+
     if (squares[i] || calculateWinner(squares)) {
       return;
     }
@@ -47,6 +52,32 @@ function App() {
     setXIsNext(!xIsNext);
   }
 
+  let randomSquareChoice = Math.floor(Math.random() * squares.length);
+
+  function computerChoosesNextSquare(i) {
+    if (chooseTeam) {
+      return;
+    }
+    if (squares[i] || calculateWinner(squares)) {
+      return;
+    }
+    let nextSquares = squares.slice();
+
+    // console.log(square);
+    if (!xIsNext) {
+      nextSquares[i] = 'O';
+    } else {
+      nextSquares[i] = 'X';
+    }
+
+    setSquares(nextSquares);
+    setXIsNext(xIsNext);
+  }
+
+  if (!xIsNext) {
+    computerChoosesNextSquare(randomSquareChoice);
+  }
+
   function handleChoosePlayerClick(value) {
     setChooseTeam(false);
 
@@ -55,7 +86,6 @@ function App() {
       setTeam('O');
     }
   }
-  console.log(chooseTeam);
 
   function calculateWinner(squares) {
     const lines = [
@@ -148,11 +178,7 @@ function App() {
         <Square value={squares[0]} onSquareClick={() => handleSquareClick(0)}>
           {squares}
         </Square>
-        <Square
-          xIsNext={xIsNext}
-          value={squares[1]}
-          onSquareClick={() => handleSquareClick(1)}
-        >
+        <Square value={squares[1]} onSquareClick={() => handleSquareClick(1)}>
           {squares}
         </Square>
         <Square value={squares[2]} onSquareClick={() => handleSquareClick(2)}>
