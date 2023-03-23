@@ -40,3 +40,24 @@
 h1 {
   font-size: 44px;
 }
+
+.red {
+  background-color: #ef4423;
+  color: white;
+}
+
+.blue {
+  background-color: #2a3492;
+  color: white;
+}
+
+.choosePlayerButton {
+  margin: 15px;
+  text-decoration: none;
+  border: none;
+  color: white;
+
+  padding: 10px 20px;
+  display: inline-block;
+  border-radius: 5px;
+}

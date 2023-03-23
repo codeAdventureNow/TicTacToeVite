@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import './App.css';
 
 function Square({ value, onSquareClick }) {
@@ -29,9 +28,9 @@ function Square({ value, onSquareClick }) {
 function App() {
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
-  console.log(squares);
+  const [chooseTeam, setChooseTeam] = useState(true);
 
-  function handleClick(i) {
+  function handleSquareClick(i) {
     if (squares[i] || calculateWinner(squares)) {
       return;
     }
@@ -45,6 +44,14 @@ function App() {
 
     setSquares(nextSquares);
     setXIsNext(!xIsNext);
+  }
+
+  function handleChoosePlayerClick(value) {
+    console.log(value);
+    setChooseTeam(false);
+    if (value === 'O') {
+      setXIsNext(false);
+    }
   }
 
   function calculateWinner(squares) {
@@ -74,15 +81,24 @@ function App() {
   const winner = calculateWinner(squares);
   let status;
 
+  if (!squares.includes(null)) {
+    console.log('Squares are full');
+  }
+
   if (winner) {
     status = 'Winner: ' + winner;
+  } else if (!squares.includes(null)) {
+    status = 'Tie Game';
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : '0');
   }
 
+  //if squares are full and no winner status =  Tie game!
+
   function handleReset() {
     setXIsNext('X');
     setSquares(Array(9).fill(null));
+    setChooseTeam(true);
   }
 
   return (
@@ -92,37 +108,58 @@ function App() {
         <span style={{ color: '#FF9526' }}>Tac </span>
         <span style={{ color: '#EF4423' }}>Toe </span>
       </h1>
-      <div className='status'>{status}</div>
+      {chooseTeam ? (
+        <div>
+          <p>Choose your team:</p>
+          <button
+            className='choosePlayerButton red'
+            value='X'
+            onClick={() => handleChoosePlayerClick('X')}
+          >
+            X
+          </button>
+          <button
+            className='choosePlayerButton blue'
+            value='O'
+            onClick={() => handleChoosePlayerClick('O')}
+          >
+            O
+          </button>
+        </div>
+      ) : (
+        <div className='status'>{status}</div>
+      )}
+
       <div className='gameBoard'>
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)}>
+        <Square value={squares[0]} onSquareClick={() => handleSquareClick(0)}>
           {squares}
         </Square>
         <Square
           xIsNext={xIsNext}
           value={squares[1]}
-          onSquareClick={() => handleClick(1)}
+          onSquareClick={() => handleSquareClick(1)}
         >
           {squares}
         </Square>
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)}>
+        <Square value={squares[2]} onSquareClick={() => handleSquareClick(2)}>
           {squares}
         </Square>
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)}>
+        <Square value={squares[3]} onSquareClick={() => handleSquareClick(3)}>
           {squares}
         </Square>
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)}>
+        <Square value={squares[4]} onSquareClick={() => handleSquareClick(4)}>
           {squares}
         </Square>
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)}>
+        <Square value={squares[5]} onSquareClick={() => handleSquareClick(5)}>
           {squares}
         </Square>
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)}>
+        <Square value={squares[6]} onSquareClick={() => handleSquareClick(6)}>
           {squares}
         </Square>
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)}>
+        <Square value={squares[7]} onSquareClick={() => handleSquareClick(7)}>
           {squares}
         </Square>
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)}>
+        <Square value={squares[8]} onSquareClick={() => handleSquareClick(8)}>
           {squares}
         </Square>
       </div>
