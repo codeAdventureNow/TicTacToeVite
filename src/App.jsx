@@ -29,6 +29,7 @@ function App() {
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [chooseTeam, setChooseTeam] = useState(true);
+  const [team, setTeam] = useState('X');
 
   function handleSquareClick(i) {
     if (squares[i] || calculateWinner(squares)) {
@@ -47,12 +48,14 @@ function App() {
   }
 
   function handleChoosePlayerClick(value) {
-    console.log(value);
     setChooseTeam(false);
+
     if (value === 'O') {
       setXIsNext(false);
+      setTeam('O');
     }
   }
+  console.log(chooseTeam);
 
   function calculateWinner(squares) {
     const lines = [
@@ -91,6 +94,7 @@ function App() {
       setChooseTeam(true);
       setXIsNext('X');
       setSquares(Array(9).fill(null));
+      setTeam('X');
     }, 3000);
   } else if (!squares.includes(null)) {
     status = 'Tie Game';
@@ -98,6 +102,7 @@ function App() {
       setChooseTeam(true);
       setXIsNext('X');
       setSquares(Array(9).fill(null));
+      setTeam('X');
     }, 3000);
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : '0');
@@ -107,6 +112,7 @@ function App() {
     setXIsNext('X');
     setSquares(Array(9).fill(null));
     setChooseTeam(true);
+    setTeam('X');
   }
 
   return (
@@ -171,6 +177,16 @@ function App() {
           {squares}
         </Square>
       </div>
+      {chooseTeam ? (
+        <></>
+      ) : (
+        <div className='assignXorOToPlayer'>
+          <h5 className='playerAssignment'>
+            You are team {team} vs. Computer {team === 'X' ? 'O' : 'X'}
+          </h5>
+        </div>
+      )}
+
       <button className='resetButton' onClick={handleReset}>
         Reset
       </button>

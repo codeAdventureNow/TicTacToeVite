@@ -61,3 +61,12 @@ h1 {
   display: inline-block;
   border-radius: 5px;
 }
+
+.assignXorOToPlayer {
+  display: flex;
+  flex-direction: row;
+}
+
+.playerAssignment {
+  margin: 10px 15px;
+}
