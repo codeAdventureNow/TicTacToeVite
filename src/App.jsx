@@ -37,7 +37,18 @@ function App() {
       return;
     }
 
-    if (squares[i] || calculateWinner(squares)) {
+    console.log(i);
+
+    if (i !== null && turns % 2 == 0) {
+      // console.log('The computer rolled a spot that been taken');
+      // console.log('Current player', squares[i]);
+      // console.log('Turns', turns);
+      // console.log(i);
+
+      setTurns(turns + 1);
+      setXIsNext(!xIsNext);
+      return;
+    } else if (squares[i] || calculateWinner(squares)) {
       return;
     }
     const nextSquares = squares.slice();
@@ -52,40 +63,16 @@ function App() {
     setXIsNext(!xIsNext);
     setTurns(turns + 1);
   }
-  console.log(turns);
+  // console.log(turns);
 
   let randomSquareChoice = Math.floor(Math.random() * squares.length);
   // console.log(randomSquareChoice);
 
-  // function computerChoosesNextSquare(i) {
-  //   if (chooseTeam) {
-  //     return;
-  //   }
-  //   if (squares[i] || calculateWinner(squares)) {
-  //     return;
-  //   }
-  //   let nextSquares = squares.slice();
-
-  //   if (xIsNext) {
-  //     nextSquares[i] = 'X';
-  //   } else {
-  //     nextSquares[i] = 'O';
-  //   }
-
-  //   setSquares(nextSquares);
-
-  //   setTurns(turns + 1);
-  // }
-
   if (turns % 2 == 0) {
-    // computerChoosesNextSquare(randomSquareChoice);
-    // // console.log('turns are even');
-    // setXIsNext(!xIsNext);
     handleSquareClick(randomSquareChoice);
     setTurns(turns + 1);
     setXIsNext(!xIsNext);
   }
-  console.log(xIsNext);
 
   function handleChoosePlayerClick(value) {
     setChooseTeam(false);
