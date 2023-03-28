@@ -1,57 +1,45 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import './App.css';
 
 function Square({ value, onSquareClick }) {
   return (
-    <>
-      {value === 'O' ? (
-        <button
-          style={{ color: '#2A3492' }}
-          className='square'
-          onClick={onSquareClick}
-        >
-          {value}
-        </button>
-      ) : (
-        <button
-          style={{ color: '#EF4423' }}
-          className='square'
-          onClick={onSquareClick}
-        >
-          {value}
-        </button>
-      )}
-    </>
+    <button
+      className={value === 'O' ? 'square blueText' : 'square redText'}
+      onClick={onSquareClick}
+    >
+      {value}
+    </button>
   );
 }
+
+const allSquaresOpen = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
 function App() {
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [chooseTeam, setChooseTeam] = useState(true);
   const [team, setTeam] = useState('X');
-  const [turns, setTurns] = useState(1);
+  const [computerTurn, setComputerTurn] = useState(false);
+  const [availableSquares, setAvailableSquares] = useState(allSquaresOpen);
 
   function handleSquareClick(i) {
     if (chooseTeam) {
       return;
     }
 
-    console.log(i);
-
-    if (i !== null && turns % 2 == 0) {
-      // console.log('The computer rolled a spot that been taken');
-      // console.log('Current player', squares[i]);
-      // console.log('Turns', turns);
-      // console.log(i);
-
-      setTurns(turns + 1);
-      setXIsNext(!xIsNext);
+    if (computerTurn) {
       return;
-    } else if (squares[i] || calculateWinner(squares)) {
+    }
+
+    if (squares[i] || calculateWinner(squares)) {
       return;
     }
     const nextSquares = squares.slice();
+
+    const nextAvailableSquares = availableSquares.filter(
+      (square) => square !== i
+    );
 
     if (xIsNext) {
       nextSquares[i] = 'X';
@@ -61,17 +49,44 @@ function App() {
 
     setSquares(nextSquares);
     setXIsNext(!xIsNext);
-    setTurns(turns + 1);
+    setAvailableSquares(nextAvailableSquares);
+    setComputerTurn(true);
   }
-  // console.log(turns);
 
-  let randomSquareChoice = Math.floor(Math.random() * squares.length);
-  // console.log(randomSquareChoice);
+  function getRandomItem(arr) {
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    const item = arr[randomIndex];
+    return item;
+  }
 
-  if (turns % 2 == 0) {
-    handleSquareClick(randomSquareChoice);
-    setTurns(turns + 1);
-    setXIsNext(!xIsNext);
+  function computerChooseSquare() {
+    setTimeout(() => {
+      const nextSquares = squares.slice();
+
+      let randomIndex = getRandomItem(availableSquares);
+      console.log(randomIndex);
+
+      if (calculateWinner(squares)) {
+        return;
+      }
+      const nextAvailableSquares = availableSquares.filter(
+        (square) => square !== randomIndex
+      );
+
+      if (xIsNext) {
+        nextSquares[randomIndex] = 'X';
+      } else {
+        nextSquares[randomIndex] = 'O';
+      }
+      setSquares(nextSquares);
+      setXIsNext(!xIsNext);
+      setAvailableSquares(nextAvailableSquares);
+      setComputerTurn(false);
+    }, 1200);
+  }
+
+  if (computerTurn) {
+    computerChooseSquare();
   }
 
   function handleChoosePlayerClick(value) {
@@ -113,19 +128,13 @@ function App() {
   if (winner) {
     status = 'Winner: ' + winner;
     setTimeout(() => {
-      setChooseTeam(true);
-      setXIsNext('X');
-      setSquares(Array(9).fill(null));
-      setTeam('X');
-    }, 3000);
+      handleReset();
+    }, 2000);
   } else if (!squares.includes(null)) {
     status = 'Tie Game';
     setTimeout(() => {
-      setChooseTeam(true);
-      setXIsNext('X');
-      setSquares(Array(9).fill(null));
-      setTeam('X');
-    }, 3000);
+      handleReset();
+    }, 2000);
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : '0');
   }
@@ -135,15 +144,17 @@ function App() {
     setSquares(Array(9).fill(null));
     setChooseTeam(true);
     setTeam('X');
-    setTurns(1);
+    setAvailableSquares(allSquaresOpen);
+    setComputerTurn(false);
+    setAvailableSquares(allSquaresOpen);
   }
 
   return (
     <div className='App'>
       <h1>
-        <span style={{ color: '#2A3492' }}>Tic </span>
-        <span style={{ color: '#FF9526' }}>Tac </span>
-        <span style={{ color: '#EF4423' }}>Toe </span>
+        <span className='blueText'>Tic </span>
+        <span className='orangeText'>Tac </span>
+        <span className='redText'>Toe </span>
       </h1>
       {chooseTeam ? (
         <div>
@@ -168,37 +179,17 @@ function App() {
       )}
 
       <div className='gameBoard'>
-        <Square value={squares[0]} onSquareClick={() => handleSquareClick(0)}>
-          {squares}
-        </Square>
-        <Square value={squares[1]} onSquareClick={() => handleSquareClick(1)}>
-          {squares}
-        </Square>
-        <Square value={squares[2]} onSquareClick={() => handleSquareClick(2)}>
-          {squares}
-        </Square>
-        <Square value={squares[3]} onSquareClick={() => handleSquareClick(3)}>
-          {squares}
-        </Square>
-        <Square value={squares[4]} onSquareClick={() => handleSquareClick(4)}>
-          {squares}
-        </Square>
-        <Square value={squares[5]} onSquareClick={() => handleSquareClick(5)}>
-          {squares}
-        </Square>
-        <Square value={squares[6]} onSquareClick={() => handleSquareClick(6)}>
-          {squares}
-        </Square>
-        <Square value={squares[7]} onSquareClick={() => handleSquareClick(7)}>
-          {squares}
-        </Square>
-        <Square value={squares[8]} onSquareClick={() => handleSquareClick(8)}>
-          {squares}
-        </Square>
+        <Square value={squares[0]} onSquareClick={() => handleSquareClick(0)} />
+        <Square value={squares[1]} onSquareClick={() => handleSquareClick(1)} />
+        <Square value={squares[2]} onSquareClick={() => handleSquareClick(2)} />
+        <Square value={squares[3]} onSquareClick={() => handleSquareClick(3)} />
+        <Square value={squares[4]} onSquareClick={() => handleSquareClick(4)} />
+        <Square value={squares[5]} onSquareClick={() => handleSquareClick(5)} />
+        <Square value={squares[6]} onSquareClick={() => handleSquareClick(6)} />
+        <Square value={squares[7]} onSquareClick={() => handleSquareClick(7)} />
+        <Square value={squares[8]} onSquareClick={() => handleSquareClick(8)} />
       </div>
-      {chooseTeam ? (
-        <></>
-      ) : (
+      {!chooseTeam && (
         <div className='assignXorOToPlayer'>
           <h5 className='playerAssignment'>
             You are team {team} vs. Computer {team === 'X' ? 'O' : 'X'}
