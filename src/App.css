@@ -51,6 +51,18 @@ h1 {
   color: white;
 }
 
+.blueText {
+  color: #2a3492;
+}
+
+.orangeText {
+  color: #ff9526;
+}
+
+.redText {
+  color: #ef4423;
+}
+
 .choosePlayerButton {
   margin: 15px;
   text-decoration: none;
